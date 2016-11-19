@@ -100,14 +100,14 @@ start-time()
 
 report(random_search.grid_scores_)
 GBM = BaggingClassifier({
-	n_estimators=100,
-	max_depth=3,
-	max_features=8,
-	max_leaf_nodes=5,
-	min_samples_leaf=6,
-	min_samples_split=5,
-	learning_rate=0.1,
-	min_weight_fraction_leaf=0.2
+	n_estimators=200,
+	max_depth=None,
+	max_features=7,
+	max_leaf_nodes=6,
+	min_samples_leaf=7,
+	min_samples_split=4,
+	learning_rate=0.3,
+	min_weight_fraction_leaf=0.0
 })
 GBM = GBM.fit(x_train,y_train)
 
