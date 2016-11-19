@@ -2,10 +2,6 @@ exec(compile(open("fe.py","rb").read(),"fe.py","exec"))
 exec(compile(open("helper.py","rb").read(),"helper.py","exec"))
 
 #############################Logisitic Regression 
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-
-
 LR = LogisticRegression()
 LR.fit(x_train,y_train)
 print(LR)
@@ -61,8 +57,6 @@ print(metrics.confusion_matrix(y_test,predicted))
 rfc.feature_importances_ # Feature Importance 
 
 ########################## CART Trees 
-from sklearn import tree 
-
 clf = tree.DecisionTreeClassifier()
 clf = clf.fit(x_train,y_train)
 
