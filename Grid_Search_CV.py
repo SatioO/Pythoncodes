@@ -58,6 +58,7 @@ different according to people thinking
 """
 from sklearn import cross_validation 
 from sklearn import tree 
+import itertools
 
 
 scores = list()
@@ -115,7 +116,7 @@ for i in range(len(combinations)):
 	CV_score.append({"mean":np.mean(scores),"sd":np.std(scores)})
 
 Best_CV = max([x["mean"] for x in CV_score])
-# The score can be anything 
+# The score can be anything and we can change it according to our scope
 # 1. Accuracy
 # 2. Kappa 
 # 3. Sensitivity 
