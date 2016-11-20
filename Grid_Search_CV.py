@@ -59,17 +59,18 @@ different according to people thinking
 from sklearn import cross_validation 
 from sklearn import tree 
 import itertools
+import numpy as np 
+import pandas as pd 
 
 
-scores = list()
 n_fold = 5 # num of folds 
-nrow = len(x_train)
+nrow = len(x_train) # Number of tupules 
 
 # We will build a Decision tree using cross-validation to decide on
 # max depth for a tree 
 # This algorithm is for grid search 
 
-
+# Here we are defining the grid for Decision Tree and Can be changed according to the need.
 param_tree = {"max_depth": [3, None],
               "max_features": [1, 3, 10],
               "min_samples_split": [1, 3, 10],
@@ -105,6 +106,7 @@ for i in range(len(combinations)):
 		"""
 		Y_test  = y_train.pop(k) # Outcome variable of test data
 		Y_train = np.concatenate(Y_train) # Outcome variable of train data
+		# Building the Decision Tree Classifier.
 		ct = tree.DecisionTreeClassifier(max_depth=combinations[i]["max_depth"],
 			max_features=combinations[i]["max_features"],
 			min_samples_split=combinations[i]["min_samples_split"],
@@ -122,22 +124,4 @@ Best_CV = max([x["mean"] for x in CV_score])
 # 3. Sensitivity 
 # 4. Specificity
 # 5. AUC 
-# 6. Any other metric of user choice 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 6. Any other metric of user choice which he can define on his own 
