@@ -36,7 +36,7 @@ batch_size = 128
 model_train = model(input_shape)
 
 
-for i in range(epochs):
+for ep in range(epochs):
 	np.random.shuffle(zip(X_train,train_Y))
 	n_batches = len(X_train)//batch_size
 	for batch_i in range(n_batches):
@@ -46,7 +46,7 @@ for i in range(epochs):
 		out = np.array(train_Y[batch_i * batch_size: (batch_i + 1) * batch_size])
 		loss = model_train.train_on_batch([leX,reX],out)
 		test_loss = model_train.test_on_batch([le_val,re_val],val_Y)
-		print (i,batch_i,loss,test_loss)
+		print (ep,batch_i,loss,test_loss)
 	score = model_train.evaluate([le_val,re_val],val_Y,verbose=0)
 	print ("Test Score",score)
 
