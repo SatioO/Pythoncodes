@@ -1,6 +1,6 @@
-exec(compile(open("pre_process.py","rb").read(),"pre_process.py","exec"))
-exec(compile(open("architecture.py","rb").read(),"architecture.py","exec"))
 exec(compile(open("lib.py","rb").read(),"lib.py","exec"))
+exec(compile(open("pre_process.py","rb").read(),"pre_process.py","exec")) # see the file before you run
+exec(compile(open("architecture.py","rb").read(),"architecture.py","exec"))
 """
 
 All the Image files location will be in filelist 
@@ -15,6 +15,12 @@ All the Image files location will be in filelist
        - Back propogate again
 
 """
+
+"""
+Training on batch
+
+"""
+
 X_train,X_val,train_Y, val_Y = train_test_split(zip(left_eye,right_eye),lr_label,
 	test_size = 0.10, random_state = 20)
 
@@ -39,7 +45,8 @@ for i in range(epochs):
 		reX = np.array([io.imread(X[i][1]) for i in np.arange(len(X))])
 		out = np.array(train_Y[batch_i * batch_size: (batch_i + 1) * batch_size])
 		loss = model_train.train_on_batch([leX,reX],out)
-	score = model.evaluate([le_val,re_val],val_Y,verbose=0)
-	print ("Test Score",score[0])
-	print ("Test Accuaracy",score[1])
+		test_loss = model_train.test_on_batch([le_val,re_val],val_Y)
+		print (i,batch_i,loss,test_loss)
+	score = model_train.evaluate([le_val,re_val],val_Y,verbose=0)
+	print ("Test Score",score)
 

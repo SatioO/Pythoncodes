@@ -9,11 +9,13 @@
 """
 
 """ will be using tensorflow backend """
-
+exec(compile(open("lib.py","rb").read(),"lib.py","exec"))
 
 """
 Some useful links 
 - https://github.com/fchollet/keras/issues/148
+- https://github.com/fchollet/keras/issues/107 #batch generator 
+- https://github.com/fchollet/keras/issues/68
 
 
 
@@ -59,7 +61,8 @@ def model(imput_shape):
 	merged_model.add(Activation("relu"))
 	merged_model.add(Dropout(0.3))
 	merged_model.add(Dense(1)) # this can be changed to linear regression if needed 
-	merged_model.add(Activation("softmax")) 
+	merged_model.compile(loss = "mean_squared_error",
+	optimizer = "adam")
 	return merged_model 
 
 
