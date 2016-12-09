@@ -78,8 +78,8 @@ def Image_generator(pdframe):
 	i_1_flip =np.array([cv2.flip(i_1_rotate[j],i) for j in range(len(i_1_rotate)) for i in [0,1]])
 
 	# now stack the Images using np.stack
-	X = np.stack((i_all,i_4,i_4_rotate,i_4_flip,i_3,i_3_rotate,i_3_flip,i_2,i_2_rotate,i_2_flip,i_1,i_1_rotate,i_1_flip))
-	Y = np.stack((pdframe.values.reshape(len(pdframe)),
+	X = np.concatenate((i_all,i_4,i_4_rotate,i_4_flip,i_3,i_3_rotate,i_3_flip,i_2,i_2_rotate,i_2_flip,i_1,i_1_rotate,i_1_flip))
+	Y = np.concatenate((pdframe.values.reshape(len(pdframe)),
 		np.full(len(i_4,i_4_rotate,i_4_flip),4),
 		np.full(len(i_3,i_3_rotate,i_3_flip),3),
 		np.full(len(i_2,i_2_rotate,i_2_flip),2),
