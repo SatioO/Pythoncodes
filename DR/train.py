@@ -42,12 +42,8 @@ labels.drop("420_right")
 filelist = glob.glob("/data/dr/data/sample_270_270/*.jpeg")
 
 #Stratified sampling for dividing data into X_train and X_valid 
-eval_size = 0.1
-KF = StratifiedKFold(y,round(1./eval_size))
-train_indicies , valid_indicies = next(iter(KF))
-
-x_train , y_train = filelist.ix[train_indicies],labels[train_indicies]
-x_valid , y_valid = filelist.ix[valid_indicies],labels[valid_indicies]
+x_train,x_valid,y_train, y_valid = train_test_split(filelist,labels,
+  test_size = 0.10, random_state = 20)
 
 
 ## train_test split 
@@ -74,5 +70,6 @@ for ep in range(epoch):
 	for batch in range(len(concat_df)):
 		X,Y = Image_generator(concat_df[batch])
 		loss = model_train.train_on_batch(X,Y)
-		test_loss = model_train.test_on_batch(X_valid,Y_valid)
+		test_loss = model_train.test_on_batch(x_valid,x_valid)
 
+# need to update the train_accuracy and val_accuracy
