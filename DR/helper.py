@@ -38,11 +38,6 @@ def translate(image,x,y):
 	return shifted
 
 
-flipped = cv2.flip(image,0) # Horizantally
-flipped = cv2.flip(image,1) # verfically
-
-
-
 # create a list of individual groups 
 def random_split(dataframe,colname = "level"):
 	gb = dataframe.groupby(colname)
@@ -60,56 +55,27 @@ def random_split(dataframe,colname = "level"):
 
 
 
-## now we a list of len(concat_df) dataframes with each dataframe having a length of 48 rows
-i_all = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in concat_df[0].index])
-
-i_4 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in concat_df[0].query("level == 4").index])
-i_4_rotate = np.array([rotate([i_4[j] for j in range(len(i_4))],i) for i in [30,60,45,150,135,210,240,225,300]])
-i_4_flip = np.array([cv2.flip([i_4_rotate[j] for j in range(len(i_4_rotate))],i) for i in [0,1]])
-
-i_3 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in concat_df[0].query("level == 3").index])
-i_3_rotate = np.array([rotate([i_3[j] for j in range(len(i_3))],i) for i in [30,60,45,150,135,210,240,225,300]])
-i_3_flip = np.array([cv2.flip([i_3_rotate[j] for j in range(len(i_3_rotate))],i) for i in [0,1]])
-
-i_2 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in concat_df[0].query("level == 2").index])
-i_2_rotate = np.array([rotate([i_2[j] for j in range(len(i_2))],i) for i in [60,150]])
-i_2_flip = np.array([cv2.flip([i_2_rotate[j] for j in range(len(i_2_rotate))],i) for i in [0,1]])
-
-i_1 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in concat_df[0].query("level == 1").index])
-i_1_rotate = np.array([rotate([i_1[j] for j in range(len(i_3))],i) for i in [30,60,150,210,240,300]])
-i_1_flip = np.array([cv2.flip([i_1_rotate[j] for j in range(len(i_1_rotate))],i) for i in [0,1]])
-
-
-
-# now stack the Images using np.stack
-
-X = np.stack((i_all,i_4,i_4_rotate,i_4_flip,i_3,i_3_rotate,i_3_flip,i_2,i_2_rotate,i_2_flip,i_1,i_1_rotate,i_1_flip))
-Y = np.stack((concat_df[0].values.reshape(len(concat_df[0])),
-	np.full(len(i_4,i_4_rotate,i_4_flip),4),
-	np.full(len(i_3,i_3_rotate,i_3_flip),3),
-	np.full(len(i_2,i_2_rotate,i_2_flip),2),
-	np.full(len(i_1,i_1_rotate,i_1_flip),1)))
-
-
 
 
 def Image_generator(pdframe):
 	i_all = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.index])
-	i_4 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 4").index])
-	i_4_rotate = np.array([rotate([i_4[j] for j in range(len(i_4))],i) for i in [30,60,45,150,135,210,240,225,300]])
-	i_4_flip = np.array([cv2.flip([i_4_rotate[j] for j in range(len(i_4_rotate))],i) for i in [0,1]])
+
+	i_4 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in concat_df[0].query("level == 4").index])
+	i_4_rotate = np.array([rotate(i_4[j],i) for j in range(len(i_4)) for i in [30,60,45,150,135,210,240,225,300]])
+	i_4_flip =np.array([cv2.flip(i_4_rotate[j],i) for j in range(len(i_4_rotate)) for i in [0,1]])
+
 
 	i_3 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 3").index])
-	i_3_rotate = np.array([rotate([i_3[j] for j in range(len(i_3))],i) for i in [30,60,45,150,135,210,240,225,300]])
-	i_3_flip = np.array([cv2.flip([i_3_rotate[j] for j in range(len(i_3_rotate))],i) for i in [0,1]])
+	i_3_rotate = np.array([rotate(i_3[j],i) for j in range(len(i_3)) for i in [30,60,45,150,135,210,240,225,300]])
+	i_3_flip =np.array([cv2.flip(i_3_rotate[j],i) for j in range(len(i_3_rotate)) for i in [0,1]])
 
 	i_2 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 2").index])
-	i_2_rotate = np.array([rotate([i_2[j] for j in range(len(i_2))],i) for i in [60,150]])
-	i_2_flip = np.array([cv2.flip([i_2_rotate[j] for j in range(len(i_2_rotate))],i) for i in [0,1]])
+	i_2_rotate = np.array([rotate(i_2_rotate[j],i) for j in range(len(i_2)) for i in [60,150]])
+	i_2_flip =np.array([cv2.flip(i_2_rotate[j],i) for j in range(len(i_2_rotate)) for i in [0,1]])
 
 	i_1 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 1").index])
-	i_1_rotate = np.array([rotate([i_1[j] for j in range(len(i_3))],i) for i in [30,60,150,210,240,300]])
-	i_1_flip = np.array([cv2.flip([i_1_rotate[j] for j in range(len(i_1_rotate))],i) for i in [0,1]])
+	i_1_rotate = np.array([rotate(i_1[j],i) for j in range(len(i_1)) for i in [30,60,150,210,240,300]])
+	i_1_flip =np.array([cv2.flip(i_1_rotate[j],i) for j in range(len(i_1_rotate)) for i in [0,1]])
 
 	# now stack the Images using np.stack
 	X = np.stack((i_all,i_4,i_4_rotate,i_4_flip,i_3,i_3_rotate,i_3_flip,i_2,i_2_rotate,i_2_flip,i_1,i_1_rotate,i_1_flip))
@@ -118,21 +84,6 @@ def Image_generator(pdframe):
 		np.full(len(i_3,i_3_rotate,i_3_flip),3),
 		np.full(len(i_2,i_2_rotate,i_2_flip),2),
 		np.full(len(i_1,i_1_rotate,i_1_flip),1)))
-
-
-
-
-for ep in epoch:
-	concat_df = random_split(labels)
-	for batch in range(len(concat_df)):
-		X,Y = Image_generator(concat_df[batch])
-		loss = model_train.train_on_batch(X,Y)
-		test_loss = model_train.test_on_batch(X_valid,Y_valid)
-
-
-
-
-
 
 
 
