@@ -33,3 +33,17 @@ for f in glob.glob("/Users/Satish/Downloads/DR/train/*.jpeg"):
 		print 0 
 	except:
 		print f 
+
+
+
+
+# Resizing Image to (270,270)
+h = 270 
+for i in filelist:
+	img = cv2.imread(i)
+	l = img.shape[0]*h/img.shape[1]
+	eye = cv2.resize(img,(h,l))
+	background = numpy.full((270,270,3),128)
+	background[135-eye.shape[0]/2:135+eye.shape[0]/2, 135-eye.shape[1]/2:135+eye.shape[1]/2,:] = eye
+	filename = "/Users/Satish/Downloads/DR/kaggle_sol/"+i.rsplit('/',1)[-1]
+	cv2.imwrite(filename,background)
