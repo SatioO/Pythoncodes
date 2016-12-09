@@ -25,12 +25,13 @@ Image Batch Generator for Imbalanced datasets
 
 ## define a few functions 
 def rotate(image,angle,center=None,scale=1.0):
-    (h,w) = image.shape[:2]
-    if center is None:
-        center =(w/2,h/2)
-        M = cv2.getRotationMatrix2D(center,angle,scale)
-        rotated = cv2.warpAffine(image,M,(w,h))
-    return rotated
+	(h,w) = image.shape[:2]
+	if center is None:
+		center =(w/2,h/2)
+		M = cv2.getRotationMatrix2D(center,angle,scale)
+		rotated = cv2.warpAffine(image,M,(w,h))
+	return rotated
+
 
 def translate(image,x,y):
 	M = np.float32([[1,0,x],[0,1,y]])
@@ -58,22 +59,22 @@ def random_split(dataframe,colname = "level"):
 
 
 def Image_generator(pdframe):
-	i_all = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.index])
+	i_all = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.index])
 
 	i_4 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in concat_df[0].query("level == 4").index])
 	i_4_rotate = np.array([rotate(i_4[j],i) for j in range(len(i_4)) for i in [30,60,45,150,135,210,240,225,300]])
 	i_4_flip =np.array([cv2.flip(i_4_rotate[j],i) for j in range(len(i_4_rotate)) for i in [0,1]])
 
 
-	i_3 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 3").index])
+	i_3 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.query("level == 3").index])
 	i_3_rotate = np.array([rotate(i_3[j],i) for j in range(len(i_3)) for i in [30,60,45,150,135,210,240,225,300]])
 	i_3_flip =np.array([cv2.flip(i_3_rotate[j],i) for j in range(len(i_3_rotate)) for i in [0,1]])
 
-	i_2 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 2").index])
+	i_2 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.query("level == 2").index])
 	i_2_rotate = np.array([rotate(i_2_rotate[j],i) for j in range(len(i_2)) for i in [60,150]])
 	i_2_flip =np.array([cv2.flip(i_2_rotate[j],i) for j in range(len(i_2_rotate)) for i in [0,1]])
 
-	i_1 = np.array([cv2.imread("/data/dr/data/pre_process/"+i+".jpeg") for i in pdframe.query("level == 1").index])
+	i_1 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.query("level == 1").index])
 	i_1_rotate = np.array([rotate(i_1[j],i) for j in range(len(i_1)) for i in [30,60,150,210,240,300]])
 	i_1_flip =np.array([cv2.flip(i_1_rotate[j],i) for j in range(len(i_1_rotate)) for i in [0,1]])
 
