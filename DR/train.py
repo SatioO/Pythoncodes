@@ -30,7 +30,13 @@ run for 10 epoch
 
 """
 
-
+from helper import *
+from model import *
+import pandas as pd 
+import numpy as np 
+import cv2
+import glob
+import sklearn.cross_validation import train_test_split 
 
 
 ## Loads the labels 
@@ -75,3 +81,7 @@ for ep in range(epoch):
 		loss = model_train.train_on_batch(X,Y)
 		test_loss = model_train.test_on_batch(x_valid,x_valid)
 		print(loss)
+
+		
+# We need to shift from train_on_batch to fit_generator as this is more flexible and reduces your code to one line from present 
+# 10+ lines . It also helps in reading Images on cpu and training network on GPU parallely, which saves a lot of time.
