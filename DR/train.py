@@ -51,7 +51,9 @@ x_train,x_test,y_train, y_test = train_test_split(x_train,y_train,
   test_size = 0.10, random_state = 20)
 
 
-
+#read the x_valid and y_valid images 
+x_valid = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in y_valid.index])
+y_valid = np.array(pd.get_dummies(y_valid["level"]))
 
 """
 
@@ -69,7 +71,7 @@ for ep in range(epoch):
 	concat_df = random_split(labels)
 	for batch in range(len(concat_df)):
 		X,Y = Image_generator(concat_df[batch])
+		np.random.shuffle(list(zip(X,Y)))
 		loss = model_train.train_on_batch(X,Y)
 		test_loss = model_train.test_on_batch(x_valid,x_valid)
-
-# need to update the train_accuracy and val_accuracy
+		print(loss)
