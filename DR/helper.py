@@ -61,7 +61,7 @@ def random_split(dataframe,colname = "level"):
 def Image_generator(pdframe):
 	i_all = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.index])
 
-	i_4 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in concat_df[0].query("level == 4").index])
+	i_4 = np.array([cv2.imread("/data/dr/data/sample_270_270/"+i+".jpeg") for i in pdframe.query("level == 4").index])
 	i_4_rotate = np.array([rotate(i_4[j],i) for j in range(len(i_4)) for i in [30,60,45,150,135,210,240,225,300]])
 	i_4_flip =np.array([cv2.flip(i_4_rotate[j],i) for j in range(len(i_4_rotate)) for i in [0,1]])
 
