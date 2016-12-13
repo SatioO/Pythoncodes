@@ -88,7 +88,7 @@ for ep in range(epoch):
 """
 
 # writing a fit_generator function instead of train_on_batch function 
-model_train.fit_generator(data_generator(x_train,location), samples_per_epoch=len(x_train), 
+model_train.fit_generator(data_generator(y_train), samples_per_epoch=len(x_train), 
 	      nb_epoch=20, verbose=1, callbacks=[], validation_data=(x_valid,y_valid), 
 	      class_weight=None, max_q_size=10, nb_worker=1, pickle_safe=False)
 
