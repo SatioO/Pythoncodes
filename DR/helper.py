@@ -79,9 +79,11 @@ def data_generator(labels,location = "/data/dr/data/sample_270_270/"):
 			
 			# now stack the Images using np.stack
 			X = np.concatenate((i_all,i_4,i_4_rotate,i_4_flip,i_3,i_3_rotate,i_3_flip,i_2,i_2_rotate,i_2_flip,i_1,i_1_rotate,i_1_flip))
-			Y = np.concatenate((pdframe.values.reshape(len(pdframe)),
-				    np.full(len(i_4)+len(i_4_rotate)+len(i_4_flip)),4),
-				   np.full(len(i_3)+len(i_3_rotate)+len(i_3_flip)),3),np.full(len(i_2)+len(i_2_rotate)+len(i_2_flip)),2),np.full(len(i_1)+len(i_1_rotate)+len(i_1_flip)),1))
+			Y = np.concatenate((pdframe.values.reshape(len(pdframe))),
+					   np.full(len(i_4)+len(i_4_rotate)+len(i_4_flip),4),
+					   np.full(len(i_3)+len(i_3_rotate)+len(i_3_flip),3),
+					   np.full(len(i_2)+len(i_2_rotate)+len(i_2_flip),2),
+					   np.full(len(i_1)+len(i_1_rotate)+len(i_1_flip),1))
 			Y = np.array(pd.get_dummies(Y))
 			np.random.shuffle(list(zip(X,Y)))
 			yeild((X,Y))
