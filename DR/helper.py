@@ -23,8 +23,13 @@ Image Batch Generator for Imbalanced datasets
 
 """
 
+import numpy as np 
+import pandas as pd 
+import cv2
+
+
 ## define a few functions 
-def rotate(image,angle,center=None,scale=1.0):
+def rotate(image, angle, center=None, scale=1.0):
 	(h,w) = image.shape[:2]
 	if center is None:
 		center =(w/2,h/2)
@@ -33,14 +38,14 @@ def rotate(image,angle,center=None,scale=1.0):
 	return rotated
 
 
-def translate(image,x,y):
+def translate(image, x, y):
 	M = np.float32([[1,0,x],[0,1,y]])
 	shifted = cv2.warpAffine(image,M,(image.shape[1],image.shape[0]))
 	return shifted
 
 
 # create a list of individual groups 
-def random_split(dataframe,colname = "level"):
+def random_split(dataframe, colname = "level"):
 	gb = dataframe.groupby(colname)
 	groups = [gb.get_group(x) for x in gb.groups]
 	# Get the ratio of Images with most under-represented class 
@@ -55,7 +60,7 @@ def random_split(dataframe,colname = "level"):
 	return concat_df
 
 
-def data_generator(labels,location = "/data/dr/data/sample_270_270/"):
+def data_generator(labels, location = "/data/dr/data/sample_270_270/"):
 	concat_df = random_split(labels)
 	while True:
 		for batch in range(len(concat_df)):
@@ -89,7 +94,7 @@ def data_generator(labels,location = "/data/dr/data/sample_270_270/"):
 			yeild((X,Y))
 
 
-def Image_generator(pdframe,location = "/data/dr/data/sample_270_270/"):
+def Image_generator(pdframe, location = "/data/dr/data/sample_270_270/"):
 	i_all = np.array([cv2.imread(location+i+".jpeg") for i in pdframe.index])
 
 	i_4 = np.array([cv2.imread(location+i+".jpeg") for i in pdframe.query("level == 4").index])
@@ -121,5 +126,4 @@ def Image_generator(pdframe,location = "/data/dr/data/sample_270_270/"):
 
 
 
-# if data generator works Please remove Image generator function.
-
+# both the generators are working . I prefer using the data_generator.
