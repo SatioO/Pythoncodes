@@ -1,35 +1,43 @@
-"""
-
-Image Batch Generator for Imbalanced datasets 
-
-
-
- - Split the labels into groups 
- - Make the count of each group 
-      - 0 - 
-      - 1 - 
-      - 2 - 
-      - 3 - 
-      - 4 - 
- -  With the most under-represented class count, divide all other classes count and keep a count of each. Take ratio virtually.
- -  Now randomly suffle each class and create a split of len(class)/ratio(class/most under-represented class).
- - Split the dataframes accordingly and stack them accordingly
-"""
-
-"""
-
-- Divide the dataframe into n-groups(n-classes). Each group containing only one class
-
-
-"""
-
+# Load the required files 
 import numpy as np 
 import pandas as pd 
 import cv2
 
 
+"""
+List of functions available on this page 
+
+rotate - rotates the Image by the specified angle.
+translate- will translate the image by the specified (x,y) lengths 
+random_split 
+      - takes input as pandas Dataframe and a column to be split
+      - outputs a list of n-dataframes (each dataframe have the class outcome in the same ratio)
+data_generator
+      - takes input as pandas Dataframe and location of the Images 
+      - outputs a tuple(X,Y) (X-Images, Y-labels)
+Image_reader
+      - Does the same as data_generator but doesn't yield the output, instead return a set of Images
+      - Useful for validation set 
+testImage_reader
+      - Takes an Image as input and outputs a numpy array of n-images (n-1 images are transformations here)
+      
+"""
+
 ## define a few functions 
 def rotate(image, angle, center=None, scale=1.0):
+	"""
+	Rotates the Image by a specified angle 
+	
+	Args:
+	image  - an numpy array of the image 
+	angle  - Angle of rotation
+	center - Default None and when used will use Image center for rotation
+	scale  - to scale down the image if required (0-1)
+	
+	Returns:
+	returns an numpy array of rotated Images 
+	
+	"""
 	(h,w) = image.shape[:2]
 	if center is None:
 		center =(w/2,h/2)
@@ -39,6 +47,18 @@ def rotate(image, angle, center=None, scale=1.0):
 
 
 def translate(image, x, y):
+	"""
+	translate the Image on the horizontal by x and vertical by y
+	
+	Args:
+	image - an numpy array of an Image
+	x     - translate the image horizantally by x units 
+	y     - translate the image vertically by y units 
+	
+	Returns:
+	returns an numpy array of shifted image
+	
+	"""
 	M = np.float32([[1,0,x],[0,1,y]])
 	shifted = cv2.warpAffine(image,M,(image.shape[1],image.shape[0]))
 	return shifted
@@ -46,6 +66,17 @@ def translate(image, x, y):
 
 # create a list of individual groups 
 def random_split(dataframe, colname = "level"):
+	"""
+	create a list of n-dataframes with same proportions of class labels across all the dataframes
+	
+	Args:
+	dataframe - a pandas dataframe
+	colname   - column name of which you want to segment into n-list 
+	
+	Returns:
+	A list with n-dataframes 
+	
+	"""
 	gb = dataframe.groupby(colname)
 	groups = [gb.get_group(x) for x in gb.groups]
 	# Get the ratio of Images with most under-represented class 
@@ -61,6 +92,19 @@ def random_split(dataframe, colname = "level"):
 
 
 def data_generator(labels, location = "/data/dr/data/sample_270_270/"):
+	"""
+	For oversampling the data and act as a generator to feed to fit_generator function for training the nn.
+	
+	Args:
+	labels   - pandas dataframe of Image labels 
+	location - location of where your Images are located. the default is set randomly
+	
+	Returns:
+	yields a tuple (X,Y) everytime it is called.
+	 X - numpy array of n-images
+	 Y - respective labels of n-images which are modified to dummies 
+	
+	"""
 	concat_df = random_split(labels)
 	while True:
 		for batch in range(len(concat_df)):
@@ -94,7 +138,21 @@ def data_generator(labels, location = "/data/dr/data/sample_270_270/"):
 			yeild((X,Y))
 
 
-def Image_generator(pdframe, location = "/data/dr/data/sample_270_270/"):
+def Image_reader(pdframe, location = "/data/dr/data/sample_270_270/"):
+	
+	"""
+	For oversampling the data and act as a feeder to the train_on_batch function in keras 
+	
+	Args:
+	pdframe   - pandas dataframe of Image labels 
+	location - location of where your Images are located. the default is set randomly
+	
+	Returns:
+	yields a tuple (X,Y) everytime it is called.
+	 X - numpy array of n-images
+	 Y - respective labels of n-images which are modified to dummies 
+	
+	"""
 	i_all = np.array([cv2.imread(location+i+".jpeg") for i in pdframe.index])
 
 	i_4 = np.array([cv2.imread(location+i+".jpeg") for i in pdframe.query("level == 4").index])
