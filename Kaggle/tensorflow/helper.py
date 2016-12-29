@@ -115,7 +115,7 @@ def Dev_Image_data_generator(folderlist,resize = (920,1200),Transformation = Tru
             background = Image.new('RGB', (resize[1], resize[0]), (255, 255, 255))
             img_w, img_h = img.size
             bg_w, bg_h = background.size
-            offset = ((bg_w - img_w) / 2, (bg_h - img_h) / 2)
+            offset = (int((bg_w - img_w) / 2), int((bg_h - img_h) / 2))
             background.paste(img, offset)
             background = np.asarray(background)
             if Transformation == True:
@@ -164,9 +164,9 @@ def Valid_Image_data_generator(folderlist,resize = (920,1200),Transformation = T
         keys = folderlist.keys()
         Images = []
         Image_label = []
-        for key in folderlist.keys():
+        for key in tqdm(folderlist.keys()):
             for j in range(len(folderlist[key])):
-                img_label = folderlist[key][i]
+                img_label = folderlist[key][j]
                 img = Image.open(img_label,'r')
                 h = resize[1]
                 l = int(img.size[1]*h/img.size[0])
@@ -174,7 +174,7 @@ def Valid_Image_data_generator(folderlist,resize = (920,1200),Transformation = T
                 background = Image.new('RGB', (resize[1], resize[0]), (255, 255, 255))
                 img_w, img_h = img.size
                 bg_w, bg_h = background.size
-                offset = ((bg_w - img_w) / 2, (bg_h - img_h) / 2)
+                offset = (int((bg_w - img_w) / 2), int((bg_h - img_h) / 2))
                 background.paste(img, offset)
                 background = np.asarray(background)
                 if Transformation == True:
