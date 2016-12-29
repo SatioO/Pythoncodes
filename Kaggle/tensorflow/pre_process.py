@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 
 # Translate
-def translate(image,x,y):
+def translate_xy(image,x,y):
     """
     Return a translated Image of the input Image
     Args:
