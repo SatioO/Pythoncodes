@@ -4,16 +4,16 @@ import tensorflow as tf
 import numpy as np
 from model1 import *
 from sklearn.cross_validation import train_test_split
+import pandas as pd 
 
 batch_size = 8
 logs_path = "/tmp/tensorflow_logs/example"
 model_path = "/models/t1"
 
 # split the data into train,valid and test
-labels = pd.read_csv("/Users/Satish/Downloads/DR/trainLabels.csv",index_col=["image"])
+labels = pd.read_csv("/data/dr/trainLabels.csv",index_col=["image"])
 
-file_loc = img_location_reader()
-train,test = train_test_split(file_loc,test_size=0.1,random_state=0)
+train,test = train_test_split(labels,test_size=0.3,random_state=0)
 train,valid = train_test_split(train,test_size=0.1,random_state=0)
 
 

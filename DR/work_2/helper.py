@@ -20,6 +20,8 @@ training:
 import glob, cv2 , random
 import numpy as np
 import pandas as pd
+from sklearn.utils import shuffle 
+from tqdm import tqdm
 
 
 def rotate(image, angle, center=None, scale=1.0):
@@ -40,15 +42,6 @@ def rotate(image, angle, center=None, scale=1.0):
 		rotated = cv2.warpAffine(image,M,(w,h))
 	return rotated
 
-def img_location_reader(folder_loc = "/Users/Satish/Downloads/DR/train"):
-    """
-    Returns a list of lists with each list containing the locations of each class
-
-    Args:
-    folder_loc : A string which contains Image folder
-
-    """
-    return glob.glob(folder_loc+"/*.jpeg")
 
 def img_location_list(labels, folder_loc="/Users/Satish/Downloads/DR/train", over_sample = True):
     """
@@ -125,35 +118,36 @@ def resize(image,size = (724,724)):
 
     """
     h = size[0]
-    l = image.shape[1]*h/image.shape[0]
+    l = int(image.shape[1]*h/image.shape[0])
     resize = cv2.resize(image,(l,h),interpolation=cv2.INTER_AREA)
     num = random.choice(range(resize.shape[1]-h))
     resize = resize[:,num:num+h,:]
     return resize
 
-def dev_image_reader(filelist,image_dummy_label):
+def dev_image_reader(filelist,labels,img_dummy_label, size = (724,724)):
     images = []
     images_label = []
     for j in range(len(filelist)):
-        x_image,y_label= image_read(filelist[j])
+        x_image,y_label= image_read(filelist[j],labels)
         x_images = agument_data(x_image)
         x_images = np.concatenate([contrast_channel_wise(x_images[i])[np.newaxis,:,:,:] for i in range(len(x_images))])
-        x_images = np.concatenate([resize(x_images[i],size=(724,724))[np.newaxis,:,:,:] for i in range(len(x_images))])
+        x_images = np.concatenate([resize(x_images[i],size)[np.newaxis,:,:,:] for i in range(len(x_images))])
         images.append(x_images)
-        images_label.append([img_dummy_label[y] for x in range(len(x_images))])
+        images_label.append([img_dummy_label[y_label] for x in range(len(x_images))])
         x_image,y_image = np.concatenate(images),np.concatenate(images_label)
+        x_image,y_image = shuffle(x_image,y_image,random_state=0)
     return x_image,y_image
 
 
-def val_test_image_reader(filelist):
-    img_list = img_location_list(filelist,over_sample=False)
+def val_test_image_reader(labels,img_dummy_label,loc,size = (724,724)):
+    img_list = img_location_list(labels, loc, over_sample = False)
     img_dummy_label = pd.get_dummies(labels["level"].unique())
     images = []
     images_label = []
-    for j in range(len(img_list)):
-        x_image,y_label= image_read(img_list[j])
+    for j in tqdm(range(len(img_list))):
+        x_image,y_label= image_read(img_list[j],labels)
         x_image = contrast_channel_wise(x_image)
-        x_image = resize(x_image, size=(724,724))
+        x_image = resize(x_image, size)
         images.append(x_image[np.newaxis,:,:,:])
         images_label.append([img_dummy_label[y_label] for x in range(len(x_image[np.newaxis,:,:,:]))])
     x_image,y_image = np.concatenate(images),np.concatenate(images_label)

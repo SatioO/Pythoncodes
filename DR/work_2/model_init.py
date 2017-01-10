@@ -16,8 +16,8 @@ def cnn_layer(input,weight,bias,name = "conv"):
     with tf.name_scope(name):
         x = tf.nn.conv2d(input,weight,strides=[1,1,1,1],padding= "SAME")
         x = tf.nn.relu(tf.nn.bias_add(x,bias))
-        x = tf.nn.fractional_max_pool(x,1.414,pseudo_random=True)
-    return x
+        x = tf.nn.fractional_max_pool(x,[1,1.414,1.414,1],pseudo_random=True)
+    return x[0]
 
 """
 
@@ -27,8 +27,7 @@ C64-3, FMP1.414, C64-3, FMP1.414
 C128-3, FMP1.414, C128-3, FMP1.414
 C192-3, FMP1.414, C192-3, FMP1.414
 C256-3, FMP1.414, C256-3, FMP1.414
-C384-3, FMP1.414, C384-3, FMP1.414
-C512-3, FMP1.414, C512-3, FMP1.414
+C384-3, FMP1.414
 D(0.5), FC1024, FC1024
 
 """
@@ -47,15 +46,12 @@ def model(X,weights,bias):
     x = cnn_layer(x, weights["w11"], bias["b11"], name="conv11")
     x = cnn_layer(x, weights["w12"], bias["b12"], name="conv12")
     x = cnn_layer(x, weights["w13"], bias["b13"], name="conv13")
-    x = cnn_layer(x, weights["w14"], bias["b14"], name="conv14")
-    x = cnn_layer(x, weights["w15"], bias["b15"], name="conv15")
-    x = cnn_layer(x, weights["w16"], bias["b16"], name="conv16")
     pool6Shape = x.get_shape().as_list()
     x = tf.reshape(x, [-1, pool6Shape[1] * pool6Shape[2] * pool6Shape[3]])
     x = tf.nn.dropout(x,0.5)
-    x = tf.add(tf.matmul(x, weights["w17"]), bias["b17"]) # 512,1024
+    x = tf.add(tf.matmul(x, weights["w14"]), bias["b14"]) # 512,1024
     x = tf.nn.relu(x)
-    x = tf.add(tf.matmul(x, weights["w18"]), bias["b18"]) # 1024,1024
+    x = tf.add(tf.matmul(x, weights["w15"]), bias["b15"]) # 1024,1024
     x = tf.nn.relu(x)
-    x = tf.add(tf.matmul(x, weights["w19"]), bias["b19"]) # 1024,5
+    x = tf.matmul(x, weights["w16"]) # 1024,5
     return x
