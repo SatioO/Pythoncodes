@@ -71,7 +71,7 @@ def img_location_list(imglist,over_sample = True):
     return img_list
 
 
-def image_read(image_location,resize=True, size = (256,256)):
+def image_read(image_location):
     """
     A function to convert the mode of GBR to RGB mode
     Args:
@@ -83,8 +83,6 @@ def image_read(image_location,resize=True, size = (256,256)):
     x = cv2.imread(image_location)
     x = cv2.cvtColor(x,cv2.COLOR_BGR2RGB)
     y = image_location.rsplit("/")[-2]
-    if resize == True:
-        x = cv2.resize(x,size, interpolation = cv2.INTER_CUBIC)
     return x,y
 
 def agument_data(image):
@@ -100,6 +98,24 @@ def agument_data(image):
     agumented_data = np.concatenate((image[np.newaxis,:,:,:],rotation[np.newaxis,:,:,:],flip_h[np.newaxis,:,:,:],flip_v[np.newaxis,:,:,:]))
     return agumented_data
 
+def resize(image,size = (724,724)):
+    """
+    resize the image to required size
+
+    Args:
+    image: A numpy 3D array of image
+    size: required size of an image. A tuple
+
+    Returns:
+    Numpy array of a resized Image
+
+    """
+    h = size[0]
+    l = int(image.shape[1]*h/image.shape[0])
+    resize = cv2.resize(image,(l,h),interpolation=cv2.INTER_AREA)
+    num = random.choice(range(resize.shape[1]-h))
+    resize = resize[:,num:num+h,:]
+    return resize
 
 def image_label(imglist):
     """
@@ -119,26 +135,33 @@ def image_label(imglist):
     return img_dict
 
 
-def dev_image_reader(filelist,img_dummy_label):
+def dev_image_reader(filelist,img_dummy_label,size=(256,256),normalize = True):
     images = []
     images_label = []
     for j in range(len(filelist)):
         x_image,y_label= image_read(filelist[j])
         x_images = agument_data(x_image)
+        x_images = np.concatenate([resize(x_images[i],size)[np.newaxis,:,:,:] for i in range(len(x_images))])
         images.append(x_images)
         images_label.append([img_dummy_label[y_label] for x in range(len(x_images))])
         x_image,y_image = np.concatenate(images),np.concatenate(images_label)
+        x_image,y_image = shuffle(x_image,y_image,random_state=0)
+        if normalize == True:
+            x_image = x_image/255.0
     return x_image,y_image
 
 
-def val_test_image_reader(filelist):
+def val_test_image_reader(filelist,size=(256,256),normalize = True):
     img_list = img_location_list(filelist,over_sample=False)
     img_dummy_label = pd.get_dummies(list(image_label(img_list).keys()))
     images = []
     images_label = []
-    for j in range(len(img_list)):
+    for j in tqdm(range(len(img_list))):
         x_image,y_label= image_read(img_list[j])
+        x_image = resize(x_image,size)
         images.append(x_image[np.newaxis,:,:,:])
         images_label.append([img_dummy_label[y_label] for x in range(len(x_image[np.newaxis,:,:,:]))])
     x_image,y_image = np.concatenate(images),np.concatenate(images_label)
+    if normalize == True:
+        x_image = x_image/255.0
     return x_image,y_image
