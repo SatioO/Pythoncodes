@@ -98,3 +98,13 @@ B, G, R = cv2.split([B, G, R])
 image = cv2.merge([B, G, R])
 
 """
+
+
+
+# auto_canny
+def auto_canny(image, sigma = 0.33):
+    v = np.median(image)
+    lower = int(max(0,(1.0-sigma)*v))
+    upper = int(max(0,(1.0+sigma)*v))
+    edged = cv2.Canny(image, lower, upper)
+    return edged
