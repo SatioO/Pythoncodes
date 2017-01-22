@@ -23,5 +23,8 @@
   "pyramid_scale":1.5,
   "window_dim":[96,32],
   "min_probability": 0.7
+  
+  "classifier_path": "model.cpickle",
+  "C" : 0.01,
 
 }
