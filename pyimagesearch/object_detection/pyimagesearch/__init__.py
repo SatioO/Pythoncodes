@@ -61,3 +61,16 @@ label
 features.shape
 
 """
+
+
+""" Tips on training your own image detector
+
+- Take special care labeling your data
+   "Garbage in, Garbage out"
+- Leverage Parallel Processing
+- Use dlib as a starting point
+- keep in mind the image pyramid and sliding window tradeoff
+- Tune detector hyperparameters
+- Run experiments and log your results
+
+"""
