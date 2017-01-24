@@ -34,3 +34,36 @@ Image descriptors and feature descriptors govern how an image is abstracted and 
 #Image Descriptors:
 **Color Channel statistics**
 **Color Histograms**
+**Hu Moments**
+**Zernike Moments**
+**Haralick texture**
+**Local Binary Patterns**
+**Histogram of Oriented Gradients**
+
+#Feature Descriptors:
+##keypoint detectors
+**FAST**
+**Harris**
+**GFTT**
+**DoG**
+**Fast Hessian**
+**STAR**
+**MSER**
+**Dense**
+**BRISK**
+**ORB**
+
+
+##Local Invariant descriptor
+**SIFT**
+**RootSIFT**
+**SURF**
+**Real-valued feature extraction and matching**
+
+##BINARY Descriptors
+**What are Binary descriptors?**
+**BRIEF**
+**ORB(descriptor)**
+**BRISK(descriptor)**
+**FREAK**
+**Binary feature extraction and matching** 
