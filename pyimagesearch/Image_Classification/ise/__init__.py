@@ -16,6 +16,7 @@ a histogram using the codebook in step2.
        | -- descriptors
        |    | --- __init__.py
        |    | --- detectanddescribe.py
+       |    | --- pbow.py
        |    | --- rootsift.py
        | -- indexer
        |    | --- __init__.py
@@ -28,7 +29,9 @@ a histogram using the codebook in step2.
        |    | --- vocabulary.py
 | --- cluster_features.py
 | --- index_features.py
-| --- extract_bovw.py
-| --- visualize_centers.py
+| --- extract_pbow.py
+| --- sample_datasets.py
+| --- test_model.py
+| --- train_model.py 
 
 """
