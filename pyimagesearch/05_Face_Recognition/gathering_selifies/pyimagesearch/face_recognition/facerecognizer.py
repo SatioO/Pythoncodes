@@ -56,4 +56,3 @@ class FaceRecognizer:
         recognizer.load(basePath+"/classifier.model")
 
         return FaceRecognizer(recognizer, trained=fri.trained , labels=fri.labels)
-        
