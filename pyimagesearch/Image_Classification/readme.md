@@ -27,3 +27,6 @@ Image Classification pipeline
 
 Algorithms
 - KNN
+- Logistic
+- SVM
+- Trees
